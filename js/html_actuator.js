@@ -46,6 +46,14 @@ HTMLActuator.prototype.clearContainer = function (container) {
   }
 };
 
+// Format display values without changing the numbers used by game logic.
+HTMLActuator.prototype.formatNumber = function (value) {
+  var digits = "٠١٢٣٤٥٦٧٨٩";
+  return String(value).replace(/[0-9]/g, function (digit) {
+    return digits.charAt(Number(digit));
+  });
+};
+
 HTMLActuator.prototype.addTile = function (tile) {
   var self = this;
 
@@ -62,7 +70,7 @@ HTMLActuator.prototype.addTile = function (tile) {
   this.applyClasses(wrapper, classes);
 
   inner.classList.add("tile-inner");
-  inner.textContent = tile.value;
+  inner.textContent = this.formatNumber(tile.value);
 
   if (tile.previousPosition) {
     // Make sure that the tile gets rendered in the previous position first
@@ -109,19 +117,19 @@ HTMLActuator.prototype.updateScore = function (score) {
   var difference = score - this.score;
   this.score = score;
 
-  this.scoreContainer.textContent = this.score;
+  this.scoreContainer.textContent = this.formatNumber(this.score);
 
   if (difference > 0) {
     var addition = document.createElement("div");
     addition.classList.add("score-addition");
-    addition.textContent = "+" + difference;
+    addition.textContent = "+" + this.formatNumber(difference);
 
     this.scoreContainer.appendChild(addition);
   }
 };
 
 HTMLActuator.prototype.updateBestScore = function (bestScore) {
-  this.bestContainer.textContent = bestScore;
+  this.bestContainer.textContent = this.formatNumber(bestScore);
 };
 
 HTMLActuator.prototype.message = function (won) {
